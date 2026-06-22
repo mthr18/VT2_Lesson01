@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,10 +13,15 @@ public class MiniCharactor : MonoBehaviour
     // カメラ軸のオブジェクト
     public GameObject cameraJoint;
 
+    [Header("** Weapon Setting **")]
+    public BaseWeapon weapon;
+
     private Vector3 _inputMoveValue;
     private Vector2 _inputLookValue;
     private float _inputAttackValue;
     private Vector3 angles;
+
+    
 
     void Start()
     {  
@@ -25,6 +31,11 @@ public class MiniCharactor : MonoBehaviour
     {
         Move();
         Look();
+
+        if( _inputAttackValue > 0.0f)
+        {
+            weapon.OnTriggerAction();   // 武器のトリガーアクションを呼び出す
+        }
     }
 
     //===移動メソッド===
@@ -55,10 +66,10 @@ public class MiniCharactor : MonoBehaviour
         // x 軸の角度に制限を設ける
         // 範囲を設ける数学関数
         // Mathf.Clamp(対象値, 最小値, 最大値)
-        angles.x = Mathf.Clamp(angles.x, -90, 90);
+        angles.x = Mathf.Clamp(angles.x, -70, 70);
 
-        transform.eulerAngles = new Vector3(0, angles.y * 0.1f, 0);
-        cameraJoint.transform.eulerAngles = new Vector3(-angles.x * 0.1f, angles.y * 0.1f, 0);
+        transform.eulerAngles = new Vector3(0, angles.y, 0);
+        cameraJoint.transform.eulerAngles = new Vector3(-angles.x, angles.y, 0);
         
     }
 
@@ -75,14 +86,5 @@ public class MiniCharactor : MonoBehaviour
     void OnAttack(InputValue value)
     {
         _inputAttackValue = value.Get<float>();
-
-        GameObject bullet = Instantiate(
-            bulletPrefab,           // 生成する弾のプレハブ
-            shotPoint.transform.position,     // 弾丸の生成位置
-            shotPoint.transform.rotation      // 弾丸の生成回転
-            );
-
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.AddForce(shotPoint.transform.forward * shotForce, ForceMode.Impulse);
     }
 }
