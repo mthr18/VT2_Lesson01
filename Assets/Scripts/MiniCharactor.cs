@@ -4,10 +4,21 @@ using UnityEngine.InputSystem;
 
 public class MiniCharactor : MonoBehaviour
 {
+
+    public enum AnimationPattern
+    {
+        Idle,
+        Walk,
+        HoldRight,
+    }
+
     [Header("** Shooter Setting **")]
     public GameObject bulletPrefab;
     public GameObject shotPoint;
     public float shotForce = 10f;
+
+    [Header("** Animator Setting **")]
+    public Animator animator;
 
     [Header("** Camera Joint **")]
     // カメラ軸のオブジェクト
@@ -35,6 +46,19 @@ public class MiniCharactor : MonoBehaviour
         if( _inputAttackValue > 0.0f)
         {
             weapon.OnTriggerAction();   // 武器のトリガーアクションを呼び出す
+        }
+
+        if(_inputMoveValue.magnitude > 0.1f)
+        {
+            animator.SetInteger("State", (int)AnimationPattern.Walk);
+        }
+        else
+        {
+            animator.SetInteger("State", (int)AnimationPattern.Idle);
+        }
+        if(_inputAttackValue > 0.1f)
+        {
+            animator.SetInteger("State", (int)AnimationPattern.HoldRight);
         }
     }
 
