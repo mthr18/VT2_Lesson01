@@ -43,6 +43,9 @@ public class MiniCharactor : MonoBehaviour
         Move();
         Look();
 
+        // ブレンドツリー用のパラメータを設定
+        animator.SetFloat("Velocity", _inputMoveValue.magnitude);
+
         if( _inputAttackValue > 0.0f)
         {
             weapon.OnTriggerAction();   // 武器のトリガーアクションを呼び出す
